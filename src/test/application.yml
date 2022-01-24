@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/market
+    username: root
+    password: hjvfirf18
+    driverClassName: org.postgresql.Driver
+server:
+  port: 8081
