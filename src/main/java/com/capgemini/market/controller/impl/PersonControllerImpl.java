@@ -19,10 +19,10 @@ public class PersonControllerImpl implements PersonController {
         this.personService = personService;
     }
 
-    @Override
-    public ResponseEntity<String> checkPerson(String login, String password) {
-        return new ResponseEntity<>(personService.checkPerson(login, password), HttpStatus.OK);
-    }
+//    @Override
+//    public ResponseEntity<String> checkPerson(String login, String password) {
+//        return new ResponseEntity<>(personService.checkPerson(login, password), HttpStatus.OK);
+//    }
 
     @Override
     public ResponseEntity<Boolean> insertPerson(Person person) {

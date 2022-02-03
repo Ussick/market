@@ -4,25 +4,27 @@ import com.capgemini.market.model.Person;
 import com.capgemini.market.repository.PersonRepository;
 import com.capgemini.market.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl implements UserDetailsService, PersonService {
     private PersonRepository personRepository;
 
     @Autowired
     public void setPersonRepository(PersonRepository personRepository) {
         this.personRepository = personRepository;
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        return personRepository.findByPersonLogin(login);
     }
 
     @Override
@@ -34,8 +36,6 @@ public class PersonServiceImpl implements PersonService {
                 return false;
             }
         }
-        String password = getSaltedHashedPassword(person.getPassword());
-        person.setPassword(password);
         String status = (person.getStatus()).toLowerCase();
         if ((!status.equals("admin")) && (!status.equals("user"))) {
             person.setStatus("unknown");
@@ -48,7 +48,6 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public String checkPerson(String login, String password) {
-        password = getSaltedHashedPassword(password);
         Person tmpPerson = personRepository.checkPerson(login, password);
         if (tmpPerson != null) {
             return tmpPerson.getName() + ", " + getAnswerForCheck(tmpPerson.getStatus());
@@ -86,8 +85,6 @@ public class PersonServiceImpl implements PersonService {
         if (tmpPerson.getId() == 0) {
             answer = "This user doesn't exist";
         } else {
-            String password = getSaltedHashedPassword(person.getPassword());
-            person.setPassword(password);
             personRepository.save(person);
             answer = "User with id " + person.getId() + " has been updated";
         }
@@ -129,15 +126,10 @@ public class PersonServiceImpl implements PersonService {
         return exist;
     }
 
-    private String getSaltedHashedPassword(String password) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        String passphrase = "myspecialspice" + password;
-        md.update(passphrase.getBytes(StandardCharsets.UTF_8));
-        return String.format("%064x", new BigInteger(1, md.digest()));
+    public static void main(String[] args) {
+        System.out.println(new PersonServiceImpl().getById(1));
+        System.out.println(new PersonServiceImpl().findAll());
+        System.out.println(new PersonServiceImpl().checkPerson("duraley@gmail.com", "0f0f891485d88db63b561763120689cd70e6dc27e73e85ea8b69332b7bdfc36d"));
+        System.out.println(new PersonServiceImpl().loadUserByUsername("duraley@gmail.com"));
     }
 }

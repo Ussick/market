@@ -9,9 +9,9 @@ import java.util.List;
 @RequestMapping(value = "/person")
 public interface PersonController {
 
-    @PostMapping(value = {"/login"})
-    ResponseEntity<String> checkPerson(@RequestParam(name = "login") String login,
-                                       @RequestParam(name = "password") String password);
+//    @PostMapping(value = {"/login"})
+//    ResponseEntity<String> checkPerson(@RequestParam(name = "login") String login,
+//                                       @RequestParam(name = "password") String password);
 
     @PostMapping(value = {"/registration"})
     ResponseEntity<Boolean> insertPerson(@RequestBody Person person);

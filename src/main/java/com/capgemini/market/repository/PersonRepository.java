@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     Person checkPerson(String login, String password);
+
+    Person findByPersonLogin(String login);
 }
