@@ -23,13 +23,14 @@ public class PersonServiceImpl implements UserDetailsService, PersonService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        return personRepository.findByPersonLogin(login);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("innn loadUserByUsername");
+        return personRepository.findByUsername(username);
     }
 
     @Override
     public Boolean addPerson(Person person) {
-        if (person == null || person.getLogin() == null) {
+        if (person == null || person.getUsername() == null) {
             return false;
         } else {
             if (personExist(person)) {
@@ -46,15 +47,15 @@ public class PersonServiceImpl implements UserDetailsService, PersonService {
         return true;
     }
 
-    @Override
-    public String checkPerson(String login, String password) {
-        Person tmpPerson = personRepository.checkPerson(login, password);
-        if (tmpPerson != null) {
-            return tmpPerson.getName() + ", " + getAnswerForCheck(tmpPerson.getStatus());
-        } else {
-            return "User doesn't exist";
-        }
-    }
+//    @Override
+//    public String checkPerson(String login, String password) {
+//        Person tmpPerson = personRepository.checkPerson(login, password);
+//        if (tmpPerson != null) {
+//            return tmpPerson.getName() + ", " + getAnswerForCheck(tmpPerson.getStatus());
+//        } else {
+//            return "User doesn't exist";
+//        }
+//    }
 
     @Override
     public List<Person> findAll() {
@@ -102,23 +103,23 @@ public class PersonServiceImpl implements UserDetailsService, PersonService {
         }
     }
 
-    private String getAnswerForCheck(String status) {
-        switch (status) {
-            case "admin":
-                return "you have successfully logged in as an admin.";
-            case "user":
-                return "you have successfully logged in as a user.";
-            default:
-                return "you have successfully logged in at the user level. If you are not a user, please contact " +
-                        "the main administrator.";
-        }
-    }
+//    private String getAnswerForCheck(String status) {
+//        switch (status) {
+//            case "admin":
+//                return "you have successfully logged in as an admin.";
+//            case "user":
+//                return "you have successfully logged in as a user.";
+//            default:
+//                return "you have successfully logged in at the user level. If you are not a user, please contact " +
+//                        "the main administrator.";
+//        }
+//    }
 
     private boolean personExist(Person person) {
         boolean exist = false;
         List<Person> personList = findAll();
         for (Person tmp : personList) {
-            if (tmp.getLogin().equals(person.getLogin())) {
+            if (tmp.getUsername().equals(person.getUsername())) {
                 exist = true;
                 break;
             }
@@ -126,10 +127,8 @@ public class PersonServiceImpl implements UserDetailsService, PersonService {
         return exist;
     }
 
-    public static void main(String[] args) {
-        System.out.println(new PersonServiceImpl().getById(1));
-        System.out.println(new PersonServiceImpl().findAll());
-        System.out.println(new PersonServiceImpl().checkPerson("duraley@gmail.com", "0f0f891485d88db63b561763120689cd70e6dc27e73e85ea8b69332b7bdfc36d"));
-        System.out.println(new PersonServiceImpl().loadUserByUsername("duraley@gmail.com"));
+    @Override
+    public String toString() {
+        return "PersonServiceImpl{}";
     }
 }

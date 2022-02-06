@@ -9,7 +9,7 @@ public interface PersonService {
 
     Boolean addPerson(Person person);
 
-    String checkPerson(String login, String password);
+//    String checkPerson(String login, String password);
 
     List<Person> findAll();
 

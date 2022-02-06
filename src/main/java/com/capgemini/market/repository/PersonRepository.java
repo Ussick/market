@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     Person checkPerson(String login, String password);
 
-    Person findByPersonLogin(String login);
+    Person findByUsername(String username);
 }
